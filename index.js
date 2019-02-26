@@ -53,7 +53,8 @@ function handleEvent(event) {
 }
 
 // listen on port
-const port = process.env.PORT || 3000;
-app.listen(port, () => {
+const ipaddress = process.env.OPENSHIFT_NODEJS_IP || "127.0.0.1";
+const port = process.env.OPENSHIFT_NODEJS_PORT || 3000;
+app.listen(port, ipaddress, () => {
   console.log(`listening on ${port}`);
 });
