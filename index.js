@@ -19,24 +19,34 @@ const app = express();
 // register a webhook handler with middleware
 // about the middleware, please refer to doc
 app.post('/callback', line.middleware(config), (req, res) => {
+
+  // for (var ev in req.body.events) {
+  //   console.log('JJWW event[%s], %s ', ev, JSON.stringify(req.body.events[ev]))
+  // }
   Promise
     .all(req.body.events.map(handleEvent))
-    .then((result) => res.json(result))
+    .then((result) => {
+      console.log("JJWW: 0  " + result)
+      res.json(result)
+
+      }
+      )
     .catch((err) => {
-      console.error(err);
+      console.error("JJWW Error: " + err);
       res.status(500).end();
     });
 });
 
 // event handler
 function handleEvent(event) {
-  if (event.type !== 'message' || event.message.type !== 'text') {
-    // ignore non-text-message event
+  console.log("handleEvent: %s", JSON.stringify(event))
+
+  if (event.type !== 'message' || event.message.type !== 'text' || !event.message.text.startsWith('echo:')) {
     return Promise.resolve(null);
   }
 
   // create a echoing text message
-  const echo = { type: 'text', text: event.message.text };
+  const echo = { type: 'text', text: event.message.text.substr(5) };
 
   // use reply API
   return client.replyMessage(event.replyToken, echo);
