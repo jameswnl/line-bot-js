@@ -49,6 +49,7 @@ function handleEvent(event) {
   const echo = { type: 'text', text: event.message.text.substr(5) };
 
   // use reply API
+  //return client.pushMessage
   return client.replyMessage(event.replyToken, echo);
 }
 
